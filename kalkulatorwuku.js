@@ -1,11 +1,24 @@
+// Format tanggal dd/mm/yyyy
+function formatDate(d) {
+  const dd = String(d.getDate()).padStart(2, '0');
+  const mm = String(d.getMonth() + 1).padStart(2, '0');
+  const yyyy = d.getFullYear();
+  return `${dd}/${mm}/${yyyy}`;
+}
+
 document.getElementById('calculate').addEventListener('click', function () {
-  const inputDate = new Date(document.getElementById('birthdate').value);
+  const input = document.getElementById('birthdate').value;
+  const inputDate = new Date(input);
+  const resultBox = document.getElementById('result');
+  const downloadBtn = document.getElementById('download');
+
   if (isNaN(inputDate.getTime())) {
-    document.getElementById('result').innerHTML = '<p style="color: orange;">Mohon masukkan tanggal lahir yang valid.</p>';
+    resultBox.innerHTML = '<p style="color: orange;">Mohon masukkan tanggal lahir yang valid.</p>';
+    downloadBtn.style.display = 'none';
     return;
   }
 
-  const refDate = new Date('1970-06-28'); // Wuku Sinta, Redite, Paing
+  const refDate = new Date('1970-06-28');
   const diffTime = inputDate.getTime() - refDate.getTime();
   const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
 
@@ -16,10 +29,9 @@ document.getElementById('calculate').addEventListener('click', function () {
   const saptaWara = ['Redite', 'Soma', 'Anggara', 'Buda', 'Wraspati', 'Sukra', 'Saniscara'];
   const pancaWara = ['Paing', 'Pon', 'Wage', 'Kliwon', 'Umanis'];
   const wukuList = [
-    'Sinta', 'Landep', 'Ukir', 'Kulantir', 'Tolu', 'Gumbreg',
-    'Wariga', 'Warigadian', 'Julungwangi', 'Sungsang', 'Dunggulan',
-    'Kuningan', 'Langkir', 'Medangsia', 'Pujut', 'Pahang', 'Krulut',
-    'Merakih', 'Tambir', 'Medangkungan', 'Matal', 'Uye', 'Menail',
+    'Sinta', 'Landep', 'Ukir', 'Kulantir', 'Tolu', 'Gumbreg', 'Wariga', 'Warigadian',
+    'Julungwangi', 'Sungsang', 'Dunggulan', 'Kuningan', 'Langkir', 'Medangsia', 'Pujut',
+    'Pahang', 'Krulut', 'Merakih', 'Tambir', 'Medangkungan', 'Matal', 'Uye', 'Menail',
     'Prangbakat', 'Bala', 'Ugu', 'Wayang', 'Kelawu', 'Dukut', 'Watugunung'
   ];
 
@@ -33,20 +45,12 @@ document.getElementById('calculate').addEventListener('click', function () {
   const uripPanca = uripPancaWara[pancaIndex];
   const totalUrip = uripSapta + uripPanca;
 
-  // Hitung otonan pertama
-  const otonan1 = new Date(inputDate.getTime() + 210 * 24 * 60 * 60 * 1000);
-  const formatDate = (d) => {
-    const dd = String(d.getDate()).padStart(2, '0');
-    const mm = String(d.getMonth() + 1).padStart(2, '0');
-    const yyyy = d.getFullYear();
-    return `${dd}/${mm}/${yyyy}`;
-  };
-  const formattedOtonan1 = formatDate(otonan1);
+  const formattedInput = formatDate(inputDate); // Gunakan fungsi formatDate yang sudah ada
 
-  // Hitung 6 otonan ke depan (~3 tahun)
+  const formattedOtonan1 = formatDate(new Date(inputDate.getTime() + 210 * 86400000));
   const jadwalOtonan = [];
   for (let i = 1; i <= 6; i++) {
-    const next = new Date(inputDate.getTime() + i * 210 * 24 * 60 * 60 * 1000);
+    const next = new Date(inputDate.getTime() + i * 210 * 86400000);
     jadwalOtonan.push(formatDate(next));
   }
 
@@ -56,14 +60,58 @@ document.getElementById('calculate').addEventListener('click', function () {
   });
   listHTML += '</ul>';
 
-  // Output ke HTML
-  document.getElementById('result').innerHTML = `
-    <p><strong>Wuku:</strong> <span>${wuku}</span></p>
-    <p><strong>Sapta Wara:</strong> <span>${sapta}</span> (Urip: ${uripSapta})</p>
-    <p><strong>Panca Wara:</strong> <span>${panca}</span> (Urip: ${uripPanca})</p>
-    <p><strong>Total Urip:</strong> <span>${totalUrip}</span></p>
-    <p><strong>Tanggal Otonan Berikutnya:</strong> <span>${formattedOtonan1}</span></p>
-    <p><strong>Jadwal Otonan 3 Tahun:</strong></p>
+  resultBox.innerHTML = `
+    <div class="pdf-header" style="margin: 0; padding: 0; text-align: center;">
+      <h2 style="margin: 0; font-size: 1.4em;">🌺 Kalkulator Otonan Bali 🌺</h2>
+      <p style="margin: 0; font-style: italic;">Hasil Perhitungan Wuku dan Urip</p>
+      <hr style="margin: 4px 0;" />
+    </div>
+	<p><strong>Tanggal Lahir :</strong> <span>${formattedInput}</span></p>
+    <p><strong>Wuku :</strong> <span>${wuku}</span></p>
+    <p><strong>Sapta Wara :</strong> <span>${sapta}</span> (Urip: ${uripSapta})</p>
+    <p><strong>Panca Wara :</strong> <span>${panca}</span> (Urip: ${uripPanca})</p>
+    <p><strong>Total Urip :</strong> <span>${totalUrip}</span></p>
+    <p><strong>Tanggal Otonan Berikutnya :</strong> <span>${formattedOtonan1}</span></p>
+    <p><strong>Jadwal Otonan 3 Tahun :</strong></p>
     ${listHTML}
   `;
+
+  downloadBtn.style.display = 'block';
+});
+
+document.getElementById('download').addEventListener('click', () => {
+  const result = document.getElementById('result');
+  if (!result.innerHTML.trim()) {
+    alert('Silakan hitung dulu sebelum mengunduh hasil!');
+    return;
+  }
+
+  const originalStyle = result.getAttribute('style') || '';
+  const spans = result.querySelectorAll('span');
+  const originalSpanColors = [];
+
+  result.style.backgroundColor = '#ffffff';
+  result.style.color = '#000000';
+
+  spans.forEach((span, i) => {
+    originalSpanColors[i] = span.style.color;
+    span.style.color = '#000000';
+  });
+
+  const opt = {
+    margin: [0, 0.3, 0.5, 0.3], // top, right, bottom, left in inches
+    filename: 'hasil-otonan.pdf',
+    image: { type: 'jpeg', quality: 0.98 },
+    html2canvas: { scale: 3 },
+    jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+  };
+
+  setTimeout(() => {
+    html2pdf().set(opt).from(result).save().then(() => {
+      result.setAttribute('style', originalStyle);
+      spans.forEach((span, i) => {
+        span.style.color = originalSpanColors[i] || '';
+      });
+    });
+  }, 300);
 });
