@@ -80,7 +80,7 @@ document.getElementById('calculate').addEventListener('click', () => {
     <p><strong>Panca Wara:</strong> <span>${birthCycle.panca} (Urip  ${birthCycle.uripPanca})</span></p>
     <p><strong>Total Urip:</strong> <span>${birthCycle.totalUrip}</span></p>
     <p><strong>Otonan di Tahun Ini:</strong> <span>${formatDate(otonanMatches[0])}</span></p>
-	<p><strong></strong><span>${birthCycle.sapta} - ${birthCycle.panca} - ${birthCycle.wuku}</span></p>
+    <!--<p><strong></strong><span>${birthCycle.sapta} - ${birthCycle.panca} - ${birthCycle.wuku}</span></p>-->
     <p><strong>Jadwal Otonan 3 Tahun:</strong></p>
     ${listHTML}
   `;
