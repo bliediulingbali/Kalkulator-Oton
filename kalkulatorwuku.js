@@ -74,13 +74,13 @@ document.getElementById('calculate').addEventListener('click', () => {
       <h2 style="margin: 0; font-size: 1.4em;">Kalkulator Otonan Bali</h2>
     </div>
     <p><strong>Tanggal Lahir:</strong> <span>${formatDate(inputDate)}</span></p>
-	<hr style="margin: 4px 0;" />
+	<hr style="margin: 3px 0;" />
     <p><strong>Wuku:</strong> <span>${birthCycle.wuku}</span></p>
     <p><strong>Sapta Wara:</strong> <span>${birthCycle.sapta} (Urip  ${birthCycle.uripSapta})</span></p>
     <p><strong>Panca Wara:</strong> <span>${birthCycle.panca} (Urip  ${birthCycle.uripPanca})</span></p>
     <p><strong>Total Urip:</strong> <span>${birthCycle.totalUrip}</span></p>
     <p><strong>Otonan di Tahun Ini:</strong> <span>${formatDate(otonanMatches[0])}</span></p>
-    <!--<p><strong></strong><span>${birthCycle.sapta} - ${birthCycle.panca} - ${birthCycle.wuku}</span></p>-->
+    <strong></strong><span>${birthCycle.sapta} - ${birthCycle.panca} WUKU ${birthCycle.wuku}</span></p>
     <p><strong>Jadwal Otonan 3 Tahun:</strong></p>
     ${listHTML}
   `;
