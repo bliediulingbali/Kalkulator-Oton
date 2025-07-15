@@ -80,7 +80,7 @@ document.getElementById('calculate').addEventListener('click', () => {
     <p><strong>Panca Wara:</strong> <span>${birthCycle.panca} (Urip  ${birthCycle.uripPanca})</span></p>
     <p><strong>Total Urip:</strong> <span>${birthCycle.totalUrip}</span></p>
     <p><strong>Otonan di Tahun Ini:</strong> <span>${formatDate(otonanMatches[0])}</span></p>
-    <strong></strong><span>${birthCycle.sapta} - ${birthCycle.panca} WUKU ${birthCycle.wuku}</span></p>
+    <span>${birthCycle.sapta} - ${birthCycle.panca} WUKU ${birthCycle.wuku}</span></p>
     <p><strong>Jadwal Otonan 3 Tahun:</strong></p>
     ${listHTML}
   `;
@@ -108,7 +108,7 @@ document.getElementById('download').addEventListener('click', () => {
   });
 
   const opt = {
-    margin: auto,
+    margin: [0, 0.3, 0.5, 0.3],
     filename: 'hasil-otonan.pdf',
     image: { type: 'jpeg', quality: 0.98 },
     html2canvas: { scale: 3 },
