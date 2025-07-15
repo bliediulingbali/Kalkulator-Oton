@@ -106,13 +106,13 @@ button:hover {
   margin-top: 10px;
   background: rgba(255, 255, 255, 0.05);
   border-radius: 8px;
-  padding: 5px;
+  padding: 15px;
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 #result p {
-  margin: 10px 0;
-  font-size: 1.1em;
+  margin: 7px 0;
+  font-size: 1em;
 }
 
 #result span {
