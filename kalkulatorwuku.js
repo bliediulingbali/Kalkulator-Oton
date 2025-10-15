@@ -25,7 +25,7 @@ function getBalineseCycle(date) {
   const pancaIdx = (daysDiff % 5 + 5) % 5;
   //const wukuIdx = Math.floor(daysDiff / 7) % 30;
   //const wukuIdx = Math.floor((daysDiff + 210) / 7) % 30;
-  const wukuIdx = ((Math.floor((daysDiff + 210) / 7)) % 30 + 30) % 30; //perubahan kode untuk hitung mundur dan maju dari tgl epoch
+  const wukuIdx = ((Math.floor((daysDiff + 210) / 7)) % 30 + 30) % 30;
   return {
     sapta: saptaWara[saptaIdx],
     panca: pancaWara[pancaIdx],
@@ -38,10 +38,21 @@ function getBalineseCycle(date) {
 
 document.getElementById('calculate').addEventListener('click', () => {
   const input = document.getElementById('birthdate').value;
-  const inputDate = new Date(input);
   const resultBox = document.getElementById('result');
   const downloadBtn = document.getElementById('download');
+  let inputDate = null;
 
+  // Parsing tanggal dari input type="date" dengan waktu tengah hari
+  // agar menghindari pergeseran tanggal karena zona waktu
+  if (/^\d{4}-\d{2}-\d{2}$/.test(input)) {
+    const [year, month, day] = input.split('-').map(Number);
+    const isoString = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}T12:00:00`;
+    inputDate = new Date(isoString);
+  } else {
+    inputDate = new Date(NaN); // invalid
+  }
+
+  // Validasi apakah tanggal valid
   if (isNaN(inputDate.getTime())) {
     resultBox.innerHTML = '<p style="color: orange;">Mohon masukkan tanggal lahir yang valid.</p>';
     downloadBtn.style.display = 'none';
@@ -49,11 +60,14 @@ document.getElementById('calculate').addEventListener('click', () => {
   }
 
   const birthCycle = getBalineseCycle(inputDate);
+
   const currentYear = new Date().getFullYear();
-  const start = new Date(`${currentYear}-01-01`);
-  const end = new Date(`${currentYear + 3}-12-31`);
+  const start = new Date(currentYear, 0, 1); // 1 Januari
+  const end = new Date(currentYear + 3, 11, 31); // 31 Desember 3 tahun ke depan
+
   const otonanMatches = [];
 
+  // Cari 6 otonan berikutnya
   for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
     const cycle = getBalineseCycle(d);
     if (
@@ -66,21 +80,23 @@ document.getElementById('calculate').addEventListener('click', () => {
     }
   }
 
+  // Bangun list HTML hasil otonan
   let listHTML = '<ul>';
   otonanMatches.forEach((tgl, i) => {
     listHTML += `<li>Otonan ke-${i + 1}: ${formatDate(tgl)}</li>`;
   });
   listHTML += '</ul>';
 
+  // Tampilkan hasil
   resultBox.innerHTML = `
     <div class="pdf-header" style="margin: 0; padding: 0; text-align: center;">
       <h2 style="margin: 0; font-size: 1.4em;">Kalkulator Otonan Bali</h2>
     </div>
     <p><strong>Tanggal Lahir:</strong> <span>${formatDate(inputDate)}</span></p>
-	<hr style="margin: 3px 0;" />
+    <hr style="margin: 3px 0;" />
     <p><strong>Wuku:</strong> <span>${birthCycle.wuku}</span></p>
-    <p><strong>Sapta Wara:</strong> <span>${birthCycle.sapta} (Urip  ${birthCycle.uripSapta})</span></p>
-    <p><strong>Panca Wara:</strong> <span>${birthCycle.panca} (Urip  ${birthCycle.uripPanca})</span></p>
+    <p><strong>Sapta Wara:</strong> <span>${birthCycle.sapta} (Urip ${birthCycle.uripSapta})</span></p>
+    <p><strong>Panca Wara:</strong> <span>${birthCycle.panca} (Urip ${birthCycle.uripPanca})</span></p>
     <p><strong>Total Urip:</strong> <span>${birthCycle.totalUrip}</span></p>
     <p><strong>Otonan di Tahun Ini:</strong> <span>${formatDate(otonanMatches[0])}</span></p>
     <p><span>${birthCycle.sapta} - ${birthCycle.panca} Wuku ${birthCycle.wuku}</span></p>
@@ -127,4 +143,3 @@ document.getElementById('download').addEventListener('click', () => {
     });
   }, 300);
 });
-
