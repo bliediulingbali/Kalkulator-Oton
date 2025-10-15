@@ -13,55 +13,17 @@ function getBalineseCycle(date) {
   const MS_PER_DAY = 86400000;
   const daysDiff = Math.floor((date - REF_DATE) / MS_PER_DAY);
 
-  const getReversedIndex = (baseIndex, length) => {
-    return ((length - (Math.abs(baseIndex) % length)) % length);
-  };
+  // === Saptawara (7 hari) ===
+  let saptaIdx = (0 + daysDiff) % 7;
+  if (saptaIdx < 0) saptaIdx = (7 + saptaIdx) % 7;
 
-  // Saptawara (7 hari)
-  let saptaIdx;
-  if (daysDiff >= 0) {
-    saptaIdx = daysDiff % 7;
-  } else {
-    saptaIdx = getReversedIndex(daysDiff, 7);
-  }
+  // === Pancawara (5 hari) ===
+  let pancaIdx = (0 + daysDiff) % 5;
+  if (pancaIdx < 0) pancaIdx = (5 + pancaIdx) % 5;
 
-  // Pancawara (5 hari)
-  let pancaIdx;
-  if (daysDiff >= 0) {
-    pancaIdx = daysDiff % 5;
-  } else {
-    pancaIdx = getReversedIndex(daysDiff, 5);
-  }
-
-  // Wuku (30 minggu)
-  let wukuIdx;
-  if (daysDiff >= 0) {
-    wukuIdx = Math.floor(daysDiff / 7) % 30;
-  } else {
-    const weeksBack = Math.floor(Math.abs(daysDiff) / 7);
-    wukuIdx = getReversedIndex(weeksBack, 30);
-  }
-
-  return {
-    sapta: saptaWara[saptaIdx],
-    panca: pancaWara[pancaIdx],
-    wuku: wukuList[wukuIdx],
-    uripSapta: uripSaptaWara[saptaIdx],
-    uripPanca: uripPancaWara[pancaIdx],
-    totalUrip: uripSaptaWara[saptaIdx] + uripPancaWara[pancaIdx]
-  };
-}
-
-  return {
-    sapta: saptaWara[saptaIdx],
-    panca: pancaWara[pancaIdx],
-    wuku: wukuList[wukuIdx],
-    uripSapta: uripSaptaWara[saptaIdx],
-    uripPanca: uripPancaWara[pancaIdx],
-    totalUrip: uripSaptaWara[saptaIdx] + uripPancaWara[pancaIdx]
-  };
-}
-
+  // === Wuku (30 minggu, dihitung berdasarkan minggu penuh) ===
+  let wukuIdx = Math.floor(daysDiff / 7) % 30;
+  if (wukuIdx < 0) wukuIdx = (30 + wukuIdx) % 30;
 
   return {
     sapta: saptaWara[saptaIdx],
@@ -164,6 +126,7 @@ document.getElementById('download').addEventListener('click', () => {
     });
   }, 300);
 });
+
 
 
 
