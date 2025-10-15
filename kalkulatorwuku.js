@@ -14,16 +14,11 @@ function getBalineseCycle(date) {
   const daysDiff = Math.floor((date - REF_DATE) / MS_PER_DAY);
 
   // === Saptawara (7 hari) ===
-  let saptaIdx = (0 + daysDiff) % 7;
-  if (saptaIdx < 0) saptaIdx = (7 + saptaIdx) % 7;
-
+  const saptaIdx = ((daysDiff % 7) + 7) % 7;
   // === Pancawara (5 hari) ===
-  let pancaIdx = (0 + daysDiff) % 5;
-  if (pancaIdx < 0) pancaIdx = (5 + pancaIdx) % 5;
-
+  const pancaIdx = ((daysDiff % 5) + 5) % 5;
   // === Wuku (30 minggu, dihitung berdasarkan minggu penuh) ===
-  let wukuIdx = Math.floor(daysDiff / 7) % 30;
-  if (wukuIdx < 0) wukuIdx = (30 + wukuIdx) % 30;
+  const wukuIdx = Math.floor((daysDiff + 210) / 7) % 30;
 
   return {
     sapta: saptaWara[saptaIdx],
@@ -126,6 +121,7 @@ document.getElementById('download').addEventListener('click', () => {
     });
   }, 300);
 });
+
 
 
 
