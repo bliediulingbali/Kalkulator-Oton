@@ -1,13 +1,56 @@
-// Fungsi bantu untuk format tanggal dd/mm/yyyy
-console.log(getBalineseCycle(new Date('1970-06-28')));
-// Output: { sapta: 'Redite', panca: 'Paing', wuku: 'Sinta', ... }
+const REF_DATE = new Date('1970-06-28');
+const saptaWara = ['Redite', 'Soma', 'Anggara', 'Buda', 'Wraspati', 'Sukra', 'Saniscara'];
+const pancaWara = ['Paing', 'Pon', 'Wage', 'Kliwon', 'Umanis'];
+const wukuList = [
+  'Sinta','Landep','Ukir','Kulantir','Tolu','Gumbreg','Wariga','Warigadian','Julungwangi','Sungsang',
+  'Dunggulan','Kuningan','Langkir','Medangsia','Pujut','Pahang','Krulut','Merakih','Tambir','Medangkungan',
+  'Matal','Uye','Menail','Prangbakat','Bala','Ugu','Wayang','Kelawu','Dukut','Watugunung'
+];
+const uripSaptaWara = [5,4,3,7,8,6,9];
+const uripPancaWara = [9,7,4,8,5];
 
-console.log(getBalineseCycle(new Date('1970-06-27')));
-// Output: { sapta: 'Saniscara', panca: 'Umanis', wuku: 'Watugunung', ... }
+function getBalineseCycle(date) {
+  const MS_PER_DAY = 86400000;
+  const daysDiff = Math.floor((date - REF_DATE) / MS_PER_DAY);
 
-console.log(getBalineseCycle(new Date('1970-06-26')));
-// Output: { sapta: 'Sukra', panca: 'Kliwon', wuku: 'Dukut', ... }
+  const getReversedIndex = (baseIndex, length) => {
+    return ((length - (Math.abs(baseIndex) % length)) % length);
+  };
 
+  // Saptawara (7 hari)
+  let saptaIdx;
+  if (daysDiff >= 0) {
+    saptaIdx = daysDiff % 7;
+  } else {
+    saptaIdx = getReversedIndex(daysDiff, 7);
+  }
+
+  // Pancawara (5 hari)
+  let pancaIdx;
+  if (daysDiff >= 0) {
+    pancaIdx = daysDiff % 5;
+  } else {
+    pancaIdx = getReversedIndex(daysDiff, 5);
+  }
+
+  // Wuku (30 minggu)
+  let wukuIdx;
+  if (daysDiff >= 0) {
+    wukuIdx = Math.floor(daysDiff / 7) % 30;
+  } else {
+    const weeksBack = Math.floor(Math.abs(daysDiff) / 7);
+    wukuIdx = getReversedIndex(weeksBack, 30);
+  }
+
+  return {
+    sapta: saptaWara[saptaIdx],
+    panca: pancaWara[pancaIdx],
+    wuku: wukuList[wukuIdx],
+    uripSapta: uripSaptaWara[saptaIdx],
+    uripPanca: uripPancaWara[pancaIdx],
+    totalUrip: uripSaptaWara[saptaIdx] + uripPancaWara[pancaIdx]
+  };
+}
 
   return {
     sapta: saptaWara[saptaIdx],
@@ -121,6 +164,7 @@ document.getElementById('download').addEventListener('click', () => {
     });
   }, 300);
 });
+
 
 
 
