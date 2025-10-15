@@ -1,43 +1,13 @@
 // Fungsi bantu untuk format tanggal dd/mm/yyyy
-function formatDate(d) {
-  const dd = String(d.getDate()).padStart(2, '0');
-  const mm = String(d.getMonth() + 1).padStart(2, '0');
-  const yyyy = d.getFullYear();
-  return `${dd}/${mm}/${yyyy}`;
-}
+console.log(getBalineseCycle(new Date('1970-06-28')));
+// Output: { sapta: 'Redite', panca: 'Paing', wuku: 'Sinta', ... }
 
-// Referensi acuan: Redite Paing Wuku Sinta di 28 Juni 1970
-const REF_DATE = new Date('1970-06-28');
-const saptaWara = ['Redite', 'Soma', 'Anggara', 'Buda', 'Wraspati', 'Sukra', 'Saniscara'];
-const pancaWara = ['Paing', 'Pon', 'Wage', 'Kliwon', 'Umanis'];
-const wukuList = [
-  'Sinta','Landep','Ukir','Kulantir','Tolu','Gumbreg','Wariga','Warigadian','Julungwangi','Sungsang',
-  'Dunggulan','Kuningan','Langkir','Medangsia','Pujut','Pahang','Krulut','Merakih','Tambir','Medangkungan',
-  'Matal','Uye','Menail','Prangbakat','Bala','Ugu','Wayang','Kelawu','Dukut','Watugunung'
-];
-const uripSaptaWara = [5,4,3,7,8,6,9];
-const uripPancaWara = [9,7,4,8,5];
+console.log(getBalineseCycle(new Date('1970-06-27')));
+// Output: { sapta: 'Saniscara', panca: 'Umanis', wuku: 'Watugunung', ... }
 
-function getBalineseCycle(date) {
-  const daysDiff = Math.floor((date - REF_DATE) / (86400000));
+console.log(getBalineseCycle(new Date('1970-06-26')));
+// Output: { sapta: 'Sukra', panca: 'Kliwon', wuku: 'Dukut', ... }
 
-  // Saptawara (7 hari)
-  let saptaIdx = daysDiff % 7;
-  if (daysDiff < 0) {
-    saptaIdx = (7 + saptaIdx) % 7; // Mundur: Redite -> Saniscara -> Sukra -> ...
-  }
-
-  // Pancawara (5 hari)
-  let pancaIdx = daysDiff % 5;
-  if (daysDiff < 0) {
-    pancaIdx = (5 + pancaIdx) % 5; // Mundur: Paing -> Umanis -> Kliwon -> ...
-  }
-
-  // Wuku (30 minggu)
-  let wukuIdx = Math.floor(daysDiff / 7) % 30;
-  if (daysDiff < 0) {
-    wukuIdx = (30 + wukuIdx) % 30; // Mundur: Sinta -> Watugunung -> Dukut -> ...
-  }
 
   return {
     sapta: saptaWara[saptaIdx],
@@ -151,6 +121,7 @@ document.getElementById('download').addEventListener('click', () => {
     });
   }, 300);
 });
+
 
 
 
