@@ -19,13 +19,35 @@ const uripSaptaWara = [5,4,3,7,8,6,9];
 const uripPancaWara = [9,7,4,8,5];
 
 function getBalineseCycle(date) {
-  const daysDiff = Math.abs(Math.floor((date - REF_DATE)) / (86400000));
-  // Saptawara: mundur 1 hari = (current - 1) % 7
-  const saptaIdx = (7 + (daysDiff % 7)) % 7;
-  // Pancawara: mundur 1 hari = (current - 1) % 5
-  const pancaIdx = (5 + (daysDiff % 5)) % 5;
-  // Wuku: mundur 1 minggu = (current - 1) % 30
-  const wukuIdx = (30 + (Math.floor(daysDiff / 7) % 30)) % 30;
+  const daysDiff = Math.floor((date - REF_DATE) / (86400000));
+
+  // Saptawara (7 hari)
+  let saptaIdx;
+  if (daysDiff >= 0) {
+    saptaIdx = daysDiff % 7;
+  } else {
+    // Jika mundur, hitung mundur dari Redite (0)
+    saptaIdx = (7 + (daysDiff % 7)) % 7;
+  }
+
+  // Pancawara (5 hari)
+  let pancaIdx;
+  if (daysDiff >= 0) {
+    pancaIdx = daysDiff % 5;
+  } else {
+    // Jika mundur, hitung mundur dari Paing (0)
+    pancaIdx = (5 + (daysDiff % 5)) % 5;
+  }
+
+  // Wuku (30 minggu)
+  let wukuIdx;
+  if (daysDiff >= 0) {
+    wukuIdx = Math.floor(daysDiff / 7) % 30;
+  } else {
+    // Jika mundur, hitung mundur dari Sinta (0)
+    wukuIdx = (30 + (Math.floor(daysDiff / 7) % 30)) % 30;
+  }
+
   return {
     sapta: saptaWara[saptaIdx],
     panca: pancaWara[pancaIdx],
@@ -127,6 +149,7 @@ document.getElementById('download').addEventListener('click', () => {
     });
   }, 300);
 });
+
 
 
 
