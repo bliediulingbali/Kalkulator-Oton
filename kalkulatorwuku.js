@@ -24,7 +24,8 @@ function getBalineseCycle(date) {
   const saptaIdx = (daysDiff % 7 + 7) % 7;
   const pancaIdx = (daysDiff % 5 + 5) % 5;
   //const wukuIdx = Math.floor(daysDiff / 7) % 30;
-  const wukuIdx = Math.floor((daysDiff + 210) / 7) % 30;
+  //const wukuIdx = Math.floor((daysDiff + 210) / 7) % 30;
+  const wukuIdx = ((Math.floor((daysDiff + 210) / 7)) % 30 + 30) % 30; //perubahan kode untuk hitung mundur dan maju dari tgl epoch
   return {
     sapta: saptaWara[saptaIdx],
     panca: pancaWara[pancaIdx],
