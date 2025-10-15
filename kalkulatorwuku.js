@@ -19,10 +19,13 @@ const uripSaptaWara = [5,4,3,7,8,6,9];
 const uripPancaWara = [9,7,4,8,5];
 
 function getBalineseCycle(date) {
-  const daysDiff = Math.abs(Math.floor((date - REF_DATE) / (86400000)));
-  const saptaIdx = (daysDiff % 7 + 7) % 7;
-  const pancaIdx = (daysDiff % 5 + 5) % 5;
-  const wukuIdx = Math.floor(daysDiff / 7) % 30;
+  const daysDiff = Math.floor((date - REF_DATE) / (86400000));
+  // Saptawara (7 hari)
+  const saptaIdx = ((daysDiff % 7) + 7) % 7;
+  // Pancawara (5 hari)
+  const pancaIdx = ((daysDiff % 5) + 5) % 5;
+  // Wuku (30 minggu = 210 hari)
+  const wukuIdx = (((Math.floor(daysDiff / 7) % 30) + 30) % 30);
   return {
     sapta: saptaWara[saptaIdx],
     panca: pancaWara[pancaIdx],
@@ -124,4 +127,5 @@ document.getElementById('download').addEventListener('click', () => {
     });
   }, 300);
 });
+
 
